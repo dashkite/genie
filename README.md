@@ -2,7 +2,10 @@
 
 A simple CoffeeScript task runner. (And nothing else.)
 
-See [Brick](../brick/README.md) for functions that read, write, and process files.
+See [Brick][] for functions that read, write, and process files.
+
+[Brick]://github.com/dashkite/brick#brick
+
 
 ## Installation
 
@@ -66,4 +69,4 @@ Define a task with the given name and dependencies using the given function.
 
 Runs the given task name.
 
-### 
+###
