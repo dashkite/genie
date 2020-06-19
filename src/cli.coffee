@@ -2,7 +2,7 @@ import vm from "vm"
 import Module from "module"
 import coffee from "coffeescript"
 import {join} from "path"
-import {run} from "./task"
+import {run} from "./index"
 import {isFile, read} from "panda-quill"
 import {red} from "colors/safe"
 

@@ -1,34 +1,33 @@
 import assert from "assert"
-import {resolve, join} from "path"
+import * as p from "path"
 import {print, test} from "amen"
-import {define, run, glob, read, write} from "../src"
-import {tee} from "panda-garden"
-import {go, map, wait, start} from "panda-river"
-import {isDirectory, rmr, read as _read} from "panda-quill"
+import {start, glob, read, tr, write} from "@dashkite/brick"
+import {define, run} from "../src"
+import * as q from "panda-quill"
 
-source = resolve "test", "files"
-target = resolve "test", "build"
+source = p.resolve "test", "files"
+build = p.resolve "test", "build"
+
+log = (context) -> console.log {context} ; context
 
 do ->
-  print await test "Panda-9000", [
+
+  print await test "Genie", [
 
     test "define task", ->
 
-      define "clean", -> rmr target
+      define "clean", -> q.rmr build
 
-      define "poem", [ "clean" ], ->
-        go [
-          glob "*.txt", source
-          wait map read
-          map tee (context) ->
-            context.target.content = context.source.content +
-              "whose fleece was white as snow."
-          wait map write target
-        ]
+      define "poem", [ "clean" ], start [
+        glob "*.txt", source
+        read
+        tr (path, content) -> content + "whose fleece was white as snow."
+        write build
+      ]
 
       await run "poem"
 
       assert.equal "Mary had a little lamb,\nwhose fleece was white as snow.",
-        await _read join target, "poem.txt"
+        await q.read p.join build, "poem.txt"
 
   ]

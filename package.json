@@ -1,57 +1,51 @@
 {
-  "name": "panda-9000",
-  "version": "5.0.3",
-  "description": "Task runner based on reactive JavaScript",
+  "name": "@dashkite/genie",
+  "version": "0.0.0",
+  "description": "Task runner for CoffeeScript",
   "files": [
-    "build/npm/src",
+    "build/src",
     "bin"
   ],
-  "main": "build/npm/src/index.js",
+  "main": "build/src/index.js",
   "bin": {
-    "p9k": "bin/p9k"
+    "genie": "bin/genie"
   },
   "scripts": {
-    "test": "p9k npm:test"
+    "test": "scripts/test",
+    "build": "scripts/build"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/pandastrike/panda-9000.git"
+    "url": "git://github.com/dashkite/genie.git"
   },
   "keywords": [
-    "functional programming",
-    "reactive",
     "task runner",
-    "build",
     "task",
     "gulp",
     "grunt"
   ],
   "authors": [
-    "Dan Yoder"
+    "Dan Yoder",
+    "David Harper"
   ],
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE.md",
   "dependencies": {
-    "@babel/core": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
-    "chokidar": "^3.0.2",
-    "coffeescript": "^2.4.1",
-    "colors": "^1.3.3",
-    "connect": "^3.7.0",
-    "connect-history-api-fallback": "^1.6.0",
-    "fast-glob": "^3.0.4",
-    "finalhandler": "^1.1.2",
-    "morgan": "^1.9.1",
-    "panda-garden": "4.0.1",
-    "panda-generics": "6.0.0",
-    "panda-parchment": "5.0.0",
-    "panda-quill": "4.0.1",
-    "panda-river": "5.0.0",
-    "serve-static": "^1.14.1"
+    "@babel/core": "^7.10.2",
+    "@babel/preset-env": "^7.10.2",
+    "@dashkite/katana": "^0.3.0",
+    "@pandastrike/garden": "^8.0.0-alpha.1",
+    "chokidar": "^3.4.0",
+    "coffeescript": "^2.5.1",
+    "colors": "^1.4.0",
+    "fast-glob": "^3.2.4",
+    "panda-generics": "^6.0.2",
+    "panda-parchment": "^6.0.3",
+    "panda-quill": "^5.0.0",
+    "panda-river": "^6.0.0"
   },
   "devDependencies": {
-    "amen": "2.1.0",
-    "panda-9000": "5.0.1",
-    "panda-builder": "4.0.13"
+    "amen": "^2.1.0",
+    "@dashkite/brick": "file:../brick"
   },
-  "engine": "node >= 8"
+  "engine": "node >= 14"
 }
