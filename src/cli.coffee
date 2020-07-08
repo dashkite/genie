@@ -35,4 +35,4 @@ do ->
       console.error red "Unable to find a tasks/index.{js,coffee} file"
       process.exit -1
   catch error
-    console.error red "p9k: #{error.stack}"
+    console.error red "genie: #{error.stack}"

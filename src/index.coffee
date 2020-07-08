@@ -7,7 +7,7 @@ lookup = (name) -> tasks[name]
 
 define = Method.create
   name: "define"
-  description: "Defines a P9K task."
+  description: "Defines a Genie task."
 
 Method.define define, isString, isArray, isFunction,
   (name, dependencies, action) ->
