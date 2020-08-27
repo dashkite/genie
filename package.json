@@ -1,6 +1,6 @@
 {
   "name": "@dashkite/genie",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Task runner for CoffeeScript",
   "files": [
     "build/src",
