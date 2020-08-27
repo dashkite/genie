@@ -61,6 +61,6 @@ run = (name = "default", visited = []) ->
         finish()
 
     else
-      console.error red "[P9K] task #{green name} not found."
+      console.error red "[genie] task #{green name} not found."
 
 export {define, run}
