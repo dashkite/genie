@@ -1,12 +1,12 @@
 import assert from "assert"
-import * as p from "path"
-import {print, test} from "amen"
-import {start, glob, read, tr, write} from "@dashkite/brick"
-import {define, run} from "../src"
+import Path from "path"
 import * as q from "panda-quill"
+import {print, test} from "amen"
+import * as m from "@dashkite/masonry"
+import * as $ from "../src"
 
-source = p.resolve "test", "files"
-build = p.resolve "test", "build"
+source = Path.resolve "test", "files"
+build = Path.resolve "test", "build"
 
 log = (context) -> console.log {context} ; context
 
@@ -16,18 +16,26 @@ do ->
 
     test "define task", ->
 
-      define "clean", -> q.rmr build
+      $.define "clean", -> m.rm build
 
-      define "poem", [ "clean" ], start [
-        glob "*.txt", source
-        read
-        tr (path, content) -> content + "whose fleece was white as snow."
-        write build
+      $.define "poem", [ "clean" ], m.start [
+        m.glob "*.txt", source
+        m.read
+        m.tr ({input}) -> input + "whose fleece was white as snow."
+        m.write build
       ]
 
-      await run "poem"
+      await $.run "poem"
 
       assert.equal "Mary had a little lamb,\nwhose fleece was white as snow.",
-        await q.read p.join build, "poem.txt"
+        await q.read (Path.join build, "poem.txt"), "utf8"
+
+    test "define task with arguments", ->
+      greeting = undefined
+      $.define "greeting", (_greeting) ->
+        greeting = _greeting
+
+      await $.run "greeting:hello"
+      assert.equal "hello", greeting
 
   ]
