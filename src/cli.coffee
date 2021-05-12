@@ -1,10 +1,13 @@
 import coffee from "coffeescript"
 import Path from "path"
+import YAML from "js-yaml"
 import * as _ from "@dashkite/joy"
 import {isFile, read} from "panda-quill"
 import dayjs from "dayjs"
+import {transform} from "@babel/core"
 import {green, red} from "colors/safe"
-import {run, list} from "./index"
+import * as genie from "./index"
+import Module from "module"
 
 load = (path) ->
   # import tasks
@@ -15,25 +18,25 @@ load = (path) ->
     transpile:
       configFile: false
       presets: [[
-        "@babel/preset-env"
+        await require("@babel/preset-env")
         targets: node: "current"
       ]]
 
 tasks = process.argv[2..]
-path = Path.join process.cwd(), "tasks", "index.coffee"
 
 do ->
   console.error "[genie] Run at",
     green dayjs().format "YYYY-MM-DD hh:mm:ss A ZZ"
+
+  if await isFile "genie.yaml"
+    genie.configure YAML.load await read "genie.yaml"
+
   try
-    if await isFile path
-      await load path
+    if await isFile "tasks/index.coffee"
+      await load "tasks/index.coffee"
       if tasks.length == 0
-        console.log green _.join "\n", do list
+        console.log green _.join "\n", do genie.list
       else
-        await run tasks
-    else
-      console.error red "[genie] unable to find a tasks/index.{js,coffee} file"
-      process.exit 1
+        await genie.run tasks
   catch error
     console.error red "[genie] #{error.stack}"

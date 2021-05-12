@@ -1,9 +1,15 @@
 import * as _ from "@dashkite/joy"
 import {red, green, magenta} from "colors/safe"
 
+configuration = {}
+configure = (c) -> configuration = c
+get = (key) -> configuration[key]
+
 tasks = {}
 lookup = (name, args = []) ->
   names = _.split ":", name
+  if names.some _.isEmpty
+    throw new Error "invalid task name: #{name}"
   while names.length > 0
     _name = _.join ":", names
     if (task = tasks[_name])?
@@ -71,4 +77,6 @@ export {
   define
   run
   list
+  configure
+  get
 }
