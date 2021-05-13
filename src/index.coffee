@@ -1,5 +1,5 @@
 import * as _ from "@dashkite/joy"
-import {red, green, magenta} from "colors/safe"
+import chalk from "chalk"
 
 configuration = {}
 configure = (c) -> configuration = c
@@ -54,7 +54,8 @@ _.generic run, _.isObject, _.isArray,
   ({name, action, args, dependencies}, visited) ->
     await run dependencies, visited
     duration = await _.benchmark -> _.apply action, args
-    console.error "[genie] Finished #{green name} in #{magenta duration}ms."
+    console.error "[genie] Finished #{chalk.green name}
+      in #{chalk.magenta duration}ms."
 
 _.generic run, _.isString, _.isArray, (name, visited) ->
 
@@ -63,12 +64,12 @@ _.generic run, _.isString, _.isArray, (name, visited) ->
     name = name[0..-2]
 
   unless name in visited
-    console.error "[genie] Starting #{green name} ..."
+    console.error "[genie] Starting #{chalk.green name} ..."
     visited.push name
     if (task = lookup name)?
       if background then run task, visited else await run task, visited
     else
-      console.error red "[genie] task #{green name} not found."
+      console.error chalk.red "[genie] task #{chalk.green name} not found."
 
 _.generic run, _.isString, (task) -> run task, []
 

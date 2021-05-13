@@ -1,6 +1,6 @@
 import assert from "assert"
+import FS from "fs/promises"
 import Path from "path"
-import * as q from "panda-quill"
 import {print, test} from "amen"
 import * as m from "@dashkite/masonry"
 import * as $ from "../src"
@@ -16,7 +16,7 @@ do ->
 
     test "define task", ->
 
-      $.define "clean", -> m.rm build
+      $.define "clean", m.rm build
 
       $.define "poem", [ "clean" ], m.start [
         m.glob "*.txt", source
@@ -28,7 +28,7 @@ do ->
       await $.run "poem"
 
       assert.equal "Mary had a little lamb,\nwhose fleece was white as snow.",
-        await q.read (Path.join build, "poem.txt"), "utf8"
+        await FS.readFile (Path.join build, "poem.txt"), "utf8"
 
     test "define task with arguments", ->
       greeting = undefined

@@ -32,15 +32,15 @@
   "dependencies": {
     "@babel/core": "^7.14.2",
     "@babel/preset-env": "^7.14.2",
-    "@dashkite/joy": "^0.2.7",
+    "@dashkite/joy": "^0.3.0",
+    "chalk": "^2.4.2",
     "coffeescript": "^2.5.1",
-    "colors": "^1.4.0",
     "dayjs": "^1.10.4",
     "js-yaml": "^4.1.0",
     "panda-quill": "^5.0.0"
   },
   "devDependencies": {
-    "@dashkite/masonry": "^0.8.0",
+    "@dashkite/masonry": "^0.10.0",
     "amen": "^3.0.0"
   },
   "engine": "node >= 14"
