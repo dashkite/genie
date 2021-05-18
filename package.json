@@ -37,7 +37,8 @@
     "coffeescript": "^2.5.1",
     "dayjs": "^1.10.4",
     "js-yaml": "^4.1.0",
-    "panda-quill": "^5.0.0"
+    "panda-quill": "^5.0.0",
+    "source-map-support": "^0.5.19"
   },
   "devDependencies": {
     "@dashkite/masonry": "^0.10.0",

@@ -67,7 +67,11 @@ _.generic run, _.isString, _.isArray, (name, visited) ->
     console.error "[genie] Starting #{chalk.green name} ..."
     visited.push name
     if (task = lookup name)?
-      if background then run task, visited else await run task, visited
+      try
+        if background then run task, visited else await run task, visited
+      catch error
+        console.error chalk.red "[genie] Error running task [#{name}]"
+        console.error error
     else
       console.error chalk.red "[genie] task #{chalk.green name} not found."
 
