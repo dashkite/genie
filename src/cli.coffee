@@ -1,3 +1,4 @@
+# including this just in case it starts working somehow
 require "source-map-support/register"
 require "module"
   .prototype
