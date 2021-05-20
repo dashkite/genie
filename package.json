@@ -41,7 +41,7 @@
     "source-map-support": "^0.5.19"
   },
   "devDependencies": {
-    "@dashkite/masonry": "^0.10.2",
+    "@dashkite/masonry": "^0.10.3",
     "amen": "^3.0.0"
   },
   "engine": "node >= 14"
