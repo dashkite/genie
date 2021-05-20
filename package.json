@@ -30,10 +30,10 @@
   ],
   "license": "SEE LICENSE IN LICENSE.md",
   "dependencies": {
-    "@babel/core": "^7.14.2",
+    "@babel/core": "^7.14.3",
     "@babel/preset-env": "^7.14.2",
     "@dashkite/joy": "^0.3.0",
-    "chalk": "^2.4.2",
+    "chalk": "^4.1.1",
     "coffeescript": "^2.5.1",
     "dayjs": "^1.10.4",
     "js-yaml": "^4.1.0",
@@ -41,7 +41,7 @@
     "source-map-support": "^0.5.19"
   },
   "devDependencies": {
-    "@dashkite/masonry": "^0.10.0",
+    "@dashkite/masonry": "^0.10.2",
     "amen": "^3.0.0"
   },
   "engine": "node >= 14"
