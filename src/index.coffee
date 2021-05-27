@@ -55,7 +55,7 @@ _.generic before, _.isString, _.isArray,
   (name, dependencies) ->
     hooks.before[ name ] = _.cat (hooks.before[ name ] ? []), dependencies
 
-_.generic define, _.isString, _.isString,
+_.generic before, _.isString, _.isString,
   (name, dependencies) ->
     before name, _.split /\s+/, dependencies
 
@@ -85,10 +85,11 @@ _.generic run, _.isObject, _.isArray,
   ({name, action, args, dependencies, before, after}, visited) ->
     await run before, visited if before?
     await run dependencies, visited
+    console.error "[genie] Starting #{chalk.green name} ..."
     duration = await _.benchmark -> _.apply action, args
-    await run after, visited if after?
     console.error "[genie] Finished #{chalk.green name}
       in #{chalk.magenta duration}ms."
+    await run after, visited if after?
 
 _.generic run, _.isString, _.isArray, (name, visited) ->
 
@@ -97,7 +98,6 @@ _.generic run, _.isString, _.isArray, (name, visited) ->
     name = name[0..-2]
 
   unless name in visited
-    console.error "[genie] Starting #{chalk.green name} ..."
     visited.push name
     if (task = lookup name)?
       try
