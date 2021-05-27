@@ -35,13 +35,13 @@
     "@dashkite/joy": "^0.3.5",
     "chalk": "^4.1.1",
     "coffeescript": "^2.5.1",
-    "dayjs": "^1.10.4",
+    "dayjs": "^1.10.5",
     "js-yaml": "^4.1.0",
     "panda-quill": "^5.0.0",
     "source-map-support": "^0.5.19"
   },
   "devDependencies": {
-    "@dashkite/masonry": "^0.10.4",
+    "@dashkite/masonry": "^0.10.8",
     "amen": "^3.0.0"
   },
   "engine": "node >= 14"
