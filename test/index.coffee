@@ -14,7 +14,7 @@ do ->
 
   print await test "Genie", [
 
-    test "define task", ->
+    await test "define task", ->
 
       $.define "clean", m.rm build
 

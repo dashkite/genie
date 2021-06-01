@@ -19,13 +19,13 @@ import {isFile, read} from "panda-quill"
 import dayjs from "dayjs"
 import chalk from "chalk"
 import * as genie from "./index"
-import Module from "module"
+import { log, report} from "./helpers"
 
 tasks = process.argv[2..]
 
 do ->
-  console.error "[genie] Run at",
-    chalk.green dayjs().format "YYYY-MM-DD hh:mm:ss A ZZ"
+  log.info "Run at {{timestamp}}",
+    timestamp: dayjs().format "YYYY-MM-DD hh:mm:ss A ZZ"
 
   if await isFile "genie.yaml"
     genie.configure YAML.load await read "genie.yaml"
@@ -38,5 +38,5 @@ do ->
       else
         await genie.run tasks
   catch error
-    console.error chalk.red "[genie] unexpected error"
-    console.error error
+    report error
+    process.exit 1

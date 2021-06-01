@@ -1,5 +1,5 @@
 import * as _ from "@dashkite/joy"
-import chalk from "chalk"
+import { log, report, TaskError } from "./helpers"
 
 configuration = {}
 configure = (c) -> configuration = c
@@ -83,13 +83,28 @@ _.generic run, _.isArray, (tasks) -> run tasks, []
 
 _.generic run, _.isObject, _.isArray,
   ({name, action, args, dependencies, before, after}, visited) ->
-    await run before, visited if before?
-    await run dependencies, visited
-    console.error "[genie] Starting #{chalk.green name} ..."
-    duration = await _.benchmark -> _.apply action, args
-    console.error "[genie] Finished #{chalk.green name}
-      in #{chalk.magenta duration}ms."
-    await run after, visited if after?
+
+    # attempt to run explicit and implicit dependencies
+    try
+      await run before, visited if before?
+      await run dependencies, visited
+    catch error
+      # don't run dependent if dependencies failed
+      throw new TaskError "Dependency failed for {{task}}", name, error
+
+    # attempt to run the main task
+    try
+      log.info "Starting {{task}} ...", task: name
+      duration = await _.benchmark -> _.apply action, args
+      log.info "Finished {{task}} in {{duration}}.", {task: name, duration}
+    catch error
+      # don't run after if the subject task failed
+      throw new TaskError "Error running {{task}}", name, error
+
+    try
+      await run after, visited if after?
+    catch error
+      throw new TaskError "Dependent {{task}} failed", name, error
 
 _.generic run, _.isString, _.isArray, (name, visited) ->
 
@@ -100,15 +115,15 @@ _.generic run, _.isString, _.isArray, (name, visited) ->
   unless name in visited
     visited.push name
     if (task = lookup name)?
-      try
-        if background then run task, visited else await run task, visited
-      catch error
-        console.error chalk.red "[genie] Error running task [#{name}]"
-        console.error error
+      if background then run task, visited else await run task, visited
     else
-      console.error chalk.red "[genie] task #{chalk.green name} not found."
+      log.error "task {{task}} not found.", task: name
 
-_.generic run, _.isString, (task) -> run task, []
+_.generic run, _.isString, (task) ->
+  try
+    await run task, []
+  catch error
+    report error
 
 export {
   lookup
