@@ -1,11 +1,12 @@
 {
   "plugins": [
     [
-      "module-extension-resolver",
-      {
-        "srcExtensions": ".coffee",
-        "dstExtension": ".js"
-      }
+      "autocomplete-index",
+      {}
+    ],
+    [
+      "add-import-extension",
+      {}
     ]
   ],
   "presets": [

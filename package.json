@@ -44,7 +44,7 @@
     "@dashkite/masonry": "^0.10.8",
     "amen": "^3.0.0",
     "babel-plugin-add-import-extension": "^1.5.1",
-    "babel-plugin-module-extension-resolver": "^1.0.0-rc.2"
+    "babel-plugin-autocomplete-index": "^0.2.0"
   },
   "engine": "node >= 14"
 }
