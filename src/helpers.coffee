@@ -2,7 +2,7 @@ import * as _ from "@dashkite/joy"
 import chalk from "chalk"
 
 class TaskError extends Error
-  constructor: (@message, @original) ->
+  constructor: (@message, @task, @original) ->
     super()
 
 format = ({task, duration, timestamp}) ->
@@ -28,16 +28,16 @@ log =
 report = _.generic
   name: "report"
   description: "Report errors to the console."
-  default: (error) -> log.error error
+  default: (error) -> log.error error.toString()
 
 _.generic report, _.isError, (error) ->
   log.error error.message
   if process.env.DEBUG?.match /\bgenie\b/
-    console.error error.original
+    console.error error
 
-_.generic report, (_.isType TaskError), (error) ->
-  report error.original
-  log.error error.message
+_.generic report, (_.isType TaskError), ({original, message, task}) ->
+  report original
+  log.error message, {task}
 
 export {
   TaskError
