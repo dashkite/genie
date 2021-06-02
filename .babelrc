@@ -1,1 +1,21 @@
-{ "presets": [ [ "@babel/env", { "targets": { "node": "current" } } ] ] }
+{
+  "plugins": [
+    [
+      "module-extension-resolver",
+      {
+        "srcExtensions": ".coffee",
+        "dstExtension": ".js"
+      }
+    ]
+  ],
+  "presets": [
+    [
+      "@babel/env",
+      {
+        "targets": {
+          "node": "current"
+        }
+      }
+    ]
+  ]
+}
