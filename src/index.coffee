@@ -18,8 +18,8 @@ lookup = (name, args = []) ->
   while names.length > 0
     _name = _.join ":", names
     if (task = tasks[_name])?
-      before = hooks.before[ _name ]
-      after = hooks.after[ _name ]
+      before = hooks.before[ name ]
+      after = hooks.after[ name ]
       return {name, task..., args, before, after}
     args = [
       _.pop names
