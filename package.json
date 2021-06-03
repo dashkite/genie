@@ -41,7 +41,7 @@
     "source-map-support": "^0.5.19"
   },
   "devDependencies": {
-    "@dashkite/masonry": "^0.11.0",
+    "@dashkite/masonry": "^0.11.2",
     "amen": "^3.0.0",
     "babel-plugin-add-import-extension": "^1.5.1",
     "babel-plugin-autocomplete-index": "^0.2.0"
