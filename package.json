@@ -11,8 +11,7 @@
     "genie": "bin/genie"
   },
   "scripts": {
-    "test": "scripts/test",
-    "build": "scripts/build"
+    "test": "scripts/test"
   },
   "repository": {
     "type": "git",
@@ -32,7 +31,7 @@
   "dependencies": {
     "@babel/core": "^7.14.3",
     "@babel/preset-env": "^7.14.4",
-    "@dashkite/joy": "file:../joy",
+    "@dashkite/joy": "^0.3.7",
     "chalk": "^4.1.1",
     "coffeescript": "^2.5.1",
     "dayjs": "^1.10.5",
