@@ -25,7 +25,7 @@ Task definitions should be placed in the `tasks` directory.
 
 ## Defining Tasks
 
-Define tasks in your `tasks/index.coffee` file.
+Define tasks in your `tasks/index.coffee` file. Note that Genie will also check `tasks/index.js` for task definitions. We like CoffeeScript, so you'll see that in examples below, but as long as Node can `require` the files referenced in index, Genie can run the defined functions. 
 
 For example, here's a simple _hello, world_ task.
 
@@ -148,4 +148,3 @@ Find a given task.
 *run name*
 
 Runs the given task name.
-
