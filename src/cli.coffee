@@ -33,14 +33,14 @@ do ->
   try
     if await isFile "tasks/index.coffee"
       require Path.resolve "tasks/index.coffee"
-
-    if await isFile "tasks/index.js"
+    else if await isFile "tasks/index.js"
       require Path.resolve "tasks/index.js"
 
-      if tasks.length == 0
-        console.log chalk.green _.join "\n", do genie.list
-      else
-        await genie.run tasks
+    if tasks.length == 0
+      console.log chalk.green _.join "\n", do genie.list
+    else
+      await genie.run tasks
+
   catch error
     report error
     process.exit 1
