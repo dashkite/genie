@@ -33,6 +33,10 @@ do ->
   try
     if await isFile "tasks/index.coffee"
       require Path.resolve "tasks/index.coffee"
+
+    if await isFile "tasks/index.js"
+      require Path.resolve "tasks/index.js"
+
       if tasks.length == 0
         console.log chalk.green _.join "\n", do genie.list
       else
