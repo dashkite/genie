@@ -27,7 +27,7 @@ lookup = (name, args = []) ->
     ]
   undefined
 
-list = -> _.keys tasks
+list = -> ( _.keys tasks ).sort()
 
 define = _.generic
   name: "define"
@@ -75,19 +75,19 @@ run = _.generic
   name: "run"
   description: "Run a Genie task or tasks."
 
-_.generic run, _.isArray, _.isArray, (tasks, visited) ->
+_.generic run, _.isArray, _.isArray, _.isArray, (tasks, args, visited) ->
   for task in tasks
-    await run task, visited
+    await run task, args, visited
 
-_.generic run, _.isArray, (tasks) -> run tasks, []
+_.generic run, _.isArray, (tasks) -> run tasks, [], []
 
 _.generic run, _.isObject, _.isArray,
   ({name, action, args, dependencies, before, after}, visited) ->
 
     # attempt to run explicit and implicit dependencies
     try
-      await run before, visited if before?
-      await run dependencies, visited
+      await ( run before, args, visited ) if before?
+      await run dependencies, args, visited
     catch error
       # don't run dependent if dependencies failed
       throw new TaskError "Dependency failed for {{task}}", name, error
@@ -102,15 +102,21 @@ _.generic run, _.isObject, _.isArray,
       throw new TaskError "Error running {{task}}", name, error
 
     try
-      await run after, visited if after?
+      await ( run after, args, visited ) if after?
     catch error
       throw new TaskError "Dependent {{task}} failed", name, error
 
-_.generic run, _.isString, _.isArray, (name, visited) ->
+_.generic run, _.isString, _.isArray, _.isArray, (name, args, visited) ->
 
   if _.endsWith "&", name
     background = true
     name = name[0..-2]
+
+  if _.endsWith ":*", name
+    if args.length > 0
+      name = name.replace "*", args.join ":"
+    else
+      name = name[0..-3]
 
   unless name in visited
     visited.push name
@@ -121,7 +127,7 @@ _.generic run, _.isString, _.isArray, (name, visited) ->
 
 _.generic run, _.isString, (task) ->
   try
-    await run task, []
+    await run task, [], []
   catch error
     report error
 
