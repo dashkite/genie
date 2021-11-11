@@ -29,20 +29,20 @@
   ],
   "license": "SEE LICENSE IN LICENSE.md",
   "dependencies": {
-    "@babel/core": "^7.14.3",
-    "@babel/preset-env": "^7.14.4",
-    "@dashkite/joy": "^0.3.7",
-    "chalk": "^4.1.1",
-    "coffeescript": "^2.5.1",
-    "dayjs": "^1.10.5",
+    "@babel/core": "^7.16.0",
+    "@babel/preset-env": "^7.16.0",
+    "@dashkite/joy": "^0.3.15",
+    "chalk": "^4.1.2",
+    "coffeescript": "^2.6.1",
+    "dayjs": "^1.10.7",
     "js-yaml": "^4.1.0",
     "panda-quill": "^5.0.0",
-    "source-map-support": "^0.5.19"
+    "source-map-support": "^0.5.20"
   },
   "devDependencies": {
-    "@dashkite/masonry": "^0.11.2",
+    "@dashkite/masonry": "^0.12.2",
     "amen": "^3.0.0",
-    "babel-plugin-add-import-extension": "^1.5.1",
+    "babel-plugin-add-import-extension": "^1.6.0",
     "babel-plugin-autocomplete-index": "^0.2.0"
   },
   "engine": "node >= 14"
