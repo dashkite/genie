@@ -32,7 +32,7 @@
     "@babel/core": "7.16.x",
     "@babel/preset-env": "7.16.x",
     "@dashkite/joy": "^0.3.16",
-    "chalk": "^5.0.1",
+    "chalk": "4.1.x",
     "coffeescript": "2.6.x",
     "dayjs": "^1.11.1",
     "js-yaml": "^4.1.0",
