@@ -1,46 +1,44 @@
-# including this just in case it starts working somehow
-require "source-map-support/register"
-require "module"
-  .prototype
-  .options =
-    transpile:
-      configFile: false
-      presets: [[
-        require "@babel/preset-env"
-        targets: node: "current"
-      ]]
+import "source-map-support/register"
 
-require "coffeescript/register"
-
-import Path from "path"
 import YAML from "js-yaml"
-import * as _ from "@dashkite/joy"
-import {isFile, read} from "panda-quill"
+
 import dayjs from "dayjs"
-import chalk from "chalk"
-import * as genie from "./index"
-import { log, report} from "./helpers"
+
+import * as Genie from "./index"
+import { round, log, print } from "./helpers/log"
+import { isFile, read } from "./helpers/file"
+import { getTaskFile } from "./helpers/import"
+import { loadGenieModules } from "./helpers/load"
+import { Benchmark } from "./helpers/benchmark"
 
 tasks = process.argv[2..]
 
 do ->
-  log.info "Run at {{timestamp}}",
-    timestamp: dayjs().format "YYYY-MM-DD hh:mm:ss A ZZ"
+
+  log.info "Loading tasks ..."
+
+  Benchmark.start "loading"
 
   if await isFile "genie.yaml"
-    genie.configure YAML.load await read "genie.yaml"
+    Genie.configure YAML.load await read "genie.yaml"
 
+  await loadGenieModules Genie
+
+  if ( path = await getTaskFile())?
+    require path
+
+  Benchmark.finish "loading"
+  
+  log.info "Finished loading tasks in 
+    #{ round Benchmark.duration "loading" }ms."
+  
   try
-    if await isFile "tasks/index.coffee"
-      require Path.resolve "tasks/index.coffee"
-    else if await isFile "tasks/index.js"
-      require Path.resolve "tasks/index.js"
 
     if tasks.length == 0
-      console.log chalk.green _.join "\n", do genie.list
+      print Genie.list().join "\n"
     else
-      await genie.run tasks
+      await Genie.run tasks
 
   catch error
-    report error
+    log.error error
     process.exit 1
