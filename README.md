@@ -30,9 +30,9 @@ Define tasks in your `tasks/index.coffee` file. Note that Genie will also check 
 For example, here's a simple _hello, world_ task.
 
 ```coffeescript
-import {define} from "@dashkite/genie"
+import * as Genie from "@dashkite/genie"
 
-define "hello-world", -> console.log "Hello, World"
+Genie.define "hello-world", -> console.log "Hello, World"
 ```
 
 Run the task like this:
@@ -46,7 +46,7 @@ npx genie hello-world
 You can define tasks that a given task depends on by simply listing them in an array or a whitespace-separated string.
 
 ```coffeescript
-define "build", "clean", ->
+Genie.define "build", "clean", ->
   # build task goes here
 ```
 
@@ -55,7 +55,7 @@ define "build", "clean", ->
 You can append a ‘&’ to any task you define and it will run in parallel with the other tasks.
 
 ```coffeescript
-define "server", "html& css& js&", ->
+Genie.define "server", "html& css& js&", ->
   server "build", fallback: "index.html"
 ```
 
@@ -64,10 +64,24 @@ define "server", "html& css& js&", ->
 You can add before and after tasks to other tasks as well, which is nice for augment pre-packaged tasks.
 
 ```coffeescript
-import { before, after } from "@dashkite/genie"
+import * as Genie from "@dashkite/genie"
 
-after "build", "images"
+Genie.after "build", "images"
 ```
+
+## Event-Driven Tasks
+
+You can define multiple task handlers via `on` in place of `define`:
+
+```coffeescriot
+import * as Genie from "@dashkite/genie"
+
+Genie.on "hello-world", -> console.log "Hello, World"
+```
+
+The advantage of using `on` instead of `define` and `before` or `after` is that each handler is independent of the others. The disadvantage is that handlers run in the order they're declared, so you can't guarantee one handler will run before another. Using `on` provides an event-driven interface to tasks.
+
+**Important:** Using `define` will overrite any handlers registered with `on`. You should avoid using `define` and `on` together for the same task name.
 
 ## Parameterized Tasks
 
@@ -84,7 +98,7 @@ For example, suppose we have a task `foo` that takes a parameter. We can referen
 So if our task definition is:
 
 ```coffeescript
-define "foo", (name) -> console.log "foo", name
+Genie.define "foo", (name) -> console.log "foo", name
 ```
 
 and we run it as:
@@ -142,6 +156,12 @@ List all the tasks that have been defined.
 *lookup name*
 
 Find a given task.
+
+### on
+
+*define name, dependencies, fn*
+
+Define a task handler with the given name and dependencies using the given function. Similar to `define`, but allows multiple handlers to run for the same task.
 
 ### run
 
