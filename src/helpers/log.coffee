@@ -1,9 +1,27 @@
 import chalk from "chalk"
 import dayjs from "dayjs"
 
+DEBUG = do ->
+  if ( debug = process.env.DEBUG )?
+    ( debug.split /\s+/ )
+      .map ( name ) -> name.toLowerCase()
+      .includes "genie"
+
 splat = ( f ) ->
   ( value ) ->
-    if Array.isArray value then f value.join " " else f value
+    f if Array.isArray value 
+      value
+        .map splat f
+        .join " " 
+    else if value.stack?
+      if DEBUG
+        if value.source?
+          "#{ value.message }\n#{ value.source.stack }"
+        else
+          value.stack
+      else
+        value.message
+    else value
     
 Colors =
   info: splat ( value ) -> chalk.green value

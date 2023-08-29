@@ -117,21 +117,26 @@ _.generic run, _.isObject, _.isArray,
       throw new Error "Dependency failed for #{ name }: #{ error }"
 
     # attempt to run the main tasks
+    log.info "Starting #{ name } ..."
+    Benchmark.start name
     try
       for action in actions
-        log.info "Starting #{ name } ..."
-        Benchmark.start name
         await _.apply action, args
-        Benchmark.finish name
-        log.info "Finished #{ name } in #{ round Benchmark.duration name }ms."
     catch error
       # don't run after if the subject task failed
-      throw new Error "Error running #{ task }: #{ error }"
+      _error = new Error "Unexpected error running task #{ name }."
+      _error.source = error
+      throw _error
+    Benchmark.finish name
+    log.info "Finished #{ name } in #{ round Benchmark.duration name }ms."
 
-    try
-      await ( run after, args, visited ) if after?
-    catch error
-      throw new Error "Dependent #{ name } failed"
+    await ( run after, args, visited ) if after?
+    # try
+    #   await ( run after, args, visited ) if after?
+    # catch error
+    #   _error = new Error "Dependent #{ name } failed"
+    #   _error.source = error
+    #   throw _error
 
 _.generic run, _.isString, _.isArray, _.isArray, ( name, args, visited ) ->
 
