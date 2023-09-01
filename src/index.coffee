@@ -37,10 +37,11 @@ _on = _.generic
 
 _.generic _on, _.isString, _.isArray, _.isFunction,
   ( name, dependencies, action ) ->
-    if ( task = tasks[ name ])?
-      task.actions.push action
-    else
-      tasks[name] = { dependencies, actions: [ action ] }
+    task = ( tasks[ name ] ?= { dependencies: [], actions: []} )
+    tasks[ name ] = {
+      dependencies: [ task.dependencies..., dependencies... ]
+      actions: [ task.actions..., action ]
+    }
 
 _.generic _on, _.isString, _.isString, _.isFunction,
   ( name, dependencies, action ) ->
@@ -108,6 +109,9 @@ _.generic run, _.isArray, ( tasks ) -> run tasks, [], []
 _.generic run, _.isObject, _.isArray,
   ({ name, actions, args, dependencies, before, after }, visited ) ->
 
+    log.info "Starting #{ name } ..."
+    Benchmark.start name
+
     # attempt to run explicit and implicit dependencies
     try
       await ( run before, args, visited ) if before?
@@ -117,8 +121,6 @@ _.generic run, _.isObject, _.isArray,
       throw new Error "Dependency failed for #{ name }: #{ error }"
 
     # attempt to run the main tasks
-    log.info "Starting #{ name } ..."
-    Benchmark.start name
     try
       for action in actions
         await _.apply action, args
