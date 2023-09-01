@@ -106,6 +106,7 @@ _.generic run, _.isArray, _.isArray, _.isArray, ( tasks, args, visited ) ->
 
 _.generic run, _.isArray, ( tasks ) -> run tasks, [], []
 
+# TODO figure out how to do error handling
 _.generic run, _.isObject, _.isArray,
   ({ name, actions, args, dependencies, before, after }, visited ) ->
 
@@ -113,32 +114,17 @@ _.generic run, _.isObject, _.isArray,
     Benchmark.start name
 
     # attempt to run explicit and implicit dependencies
-    try
-      await ( run before, args, visited ) if before?
-      await run dependencies, args, visited
-    catch error
-      # don't run dependent if dependencies failed
-      throw new Error "Dependency failed for #{ name }: #{ error }"
+    await ( run before, args, visited ) if before?
+    await run dependencies, args, visited
 
     # attempt to run the main tasks
-    try
-      for action in actions
-        await _.apply action, args
-    catch error
-      # don't run after if the subject task failed
-      _error = new Error "Unexpected error running task #{ name }."
-      _error.source = error
-      throw _error
+    for action in actions
+      await _.apply action, args
+
     Benchmark.finish name
     log.info "Finished #{ name } in #{ round Benchmark.duration name }ms."
 
     await ( run after, args, visited ) if after?
-    # try
-    #   await ( run after, args, visited ) if after?
-    # catch error
-    #   _error = new Error "Dependent #{ name } failed"
-    #   _error.source = error
-    #   throw _error
 
 _.generic run, _.isString, _.isArray, _.isArray, ( name, args, visited ) ->
 
