@@ -40,6 +40,8 @@
     "source-map-support": "^0.5.21"
   },
   "devDependencies": {
+    "@dashkite/genie": "link:",
+    "@dashkite/genie-presets": "link:../genie-presets",
     "@dashkite/masonry": "0.12.4",
     "amen": "^3.0.0",
     "babel-plugin-add-import-extension": "^1.6.0",

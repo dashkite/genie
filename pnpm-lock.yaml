@@ -34,6 +34,12 @@ dependencies:
     version: 0.5.21
 
 devDependencies:
+  '@dashkite/genie':
+    specifier: 'link:'
+    version: 'link:'
+  '@dashkite/genie-presets':
+    specifier: link:../genie-presets
+    version: link:../genie-presets
   '@dashkite/masonry':
     specifier: 0.12.4
     version: 0.12.4
