@@ -1,5 +1,5 @@
 import Path from "node:path"
-import coffee from "coffeescript"
+import Coffee from "coffeescript"
 import { log } from "./log"
 import {
   isFile
@@ -10,21 +10,19 @@ import {
 
 compile = ( source, target ) ->
   write target,
-    coffee.compile ( await read source ),
+    Coffee.compile ( await read source ),
       bare: true
       inlineMap: true
       filename: source
       transpile:
         filename: source
-        plugins: [
-          [ require "babel-plugin-add-import-extension", {} ]
-        ]
         presets: [
-          [
-            require "@babel/preset-env"
-            targets: node: "current"
-          ]
+          [ require "@babel/preset-env" ]
         ]
+        plugins: [
+          [ require "babel-plugin-autocomplete-index", ]          
+        ]
+        targets: node: "current"
 
 getTaskFile = ->
   try

@@ -1,5 +1,3 @@
-import "source-map-support/register"
-
 import YAML from "js-yaml"
 
 import dayjs from "dayjs"
