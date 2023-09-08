@@ -11,6 +11,7 @@
     "genie": "bin/genie"
   },
   "scripts": {
+    "build": "scripts/build",
     "test": "scripts/test"
   },
   "repository": {
