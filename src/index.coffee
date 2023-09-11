@@ -106,7 +106,6 @@ _.generic run, _.isArray, _.isArray, _.isArray, ( tasks, args, visited ) ->
 
 _.generic run, _.isArray, ( tasks ) -> run tasks, [], []
 
-# TODO figure out how to do error handling
 _.generic run, _.isObject, _.isArray,
   ({ name, actions, args, dependencies, before, after }, visited ) ->
 
@@ -133,23 +132,20 @@ _.generic run, _.isString, _.isArray, _.isArray, ( name, args, visited ) ->
     name = name[0..-2]
 
   if _.endsWith ":*", name
-    if args.length > 0
-      name = name.replace "*", args.join ":"
+    name = if args.length > 0
+      name.replace "*", args.join ":"
     else
-      name = name[0..-3]
+      name[0..-3]
 
   unless name in visited
     visited.push name
     if (task = lookup name)?
       if background then run task, visited else await run task, visited
     else
-      log.error "task #{ name } not found."
+      throw new Error "task #{ name } not found."
 
 _.generic run, _.isString, (task) ->
-  try
-    await run task, [], []
-  catch error
-    log.error error
+  await run task, [], []
 
 export {
   lookup
