@@ -1,5 +1,6 @@
 import Path from "node:path"
 import FS from "node:fs/promises"
+import * as Glob from "fast-glob"
 
 isFile = ( path ) ->
   try
@@ -24,10 +25,14 @@ write = ( path, output ) ->
   await FS.mkdir ( Path.dirname path ), recursive: true
   FS.writeFile path, output
 
+glob = ( patterns ) ->
+  Glob.glob patterns, cwd: "."
+
 export {
   isFile
   mtime
   isNewer
   read
   write
+  glob
 }

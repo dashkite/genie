@@ -8,7 +8,8 @@ loadGenieModules = ( Genie ) ->
         ( qname.split "/" )[ 1 ]
       else qname
     if name.startsWith "genie-"
-      exports = require require.resolve qname, paths: [ "./node_modules" ]
+      exports = require require.resolve qname, 
+        paths: [ "./node_modules" ]
       exports.default? Genie
 
 export { loadGenieModules }

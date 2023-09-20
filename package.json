@@ -36,6 +36,7 @@
     "chalk": "4.x.x",
     "coffeescript": "2.7.x",
     "dayjs": "^1.11.9",
+    "fast-glob": "^3.3.1",
     "js-yaml": "^4.1.0"
   },
   "devDependencies": {

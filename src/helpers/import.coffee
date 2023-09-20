@@ -6,6 +6,7 @@ import {
   isNewer
   read
   write
+  glob
 } from "./file"
 
 compile = ( source, target ) ->
@@ -20,20 +21,34 @@ compile = ( source, target ) ->
           [ require "@babel/preset-env" ]
         ]
         plugins: [
-          [ require "babel-plugin-autocomplete-index", ]          
+          [ require "babel-plugin-autocomplete-index" ]          
         ]
         targets: node: "current"
 
+getTarget = ( root, path ) ->
+  directory = Path.dirname path
+  extension = Path.extname path
+  basename = Path.basename path, extension
+  Path.join root, directory, "#{ basename }.js"
+
+compileAll = ->
+  for source from await glob "tasks/**/*.coffee"
+    target = getTarget ".genie", source
+    try
+      if await isNewer source, target
+        await compile source, target
+    catch error
+      console.log error
+
+relative = Path.join "tasks", "index.js"
+
 getTaskFile = ->
-  try
-    if await isFile "tasks/index.coffee"
-      if await isNewer "tasks/index.coffee", ".genie/tasks/index.js"
-        await compile "tasks/index.coffee", ".genie/tasks/index.js"
-      Path.resolve ".genie/tasks/index.js"
-    else if await isFile "tasks/index.js"
-      Path.resolve "tasks/index.js"
-  catch error
-    console.log error
+  await compileAll()
+  target = Path.join ".genie", relative   
+  if await isFile target 
+    Path.resolve target 
+  else if await isFile relative
+    Path.resolve relative
 
 export {
   getTaskFile
