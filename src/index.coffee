@@ -121,7 +121,13 @@ _.generic run, _.isObject, _.isArray,
       await _.apply action, args
 
     Benchmark.finish name
-    log.info "Finished #{ name } in #{ round Benchmark.duration name }ms."
+    duration = Benchmark.duration name
+    if duration < 1000
+      units = "ms"
+    else
+      duration /= 1000
+      units = "s"
+    log.info "Finished #{ name } in #{ round duration }#{ units }."
 
     await ( run after, args, visited ) if after?
 
