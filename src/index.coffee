@@ -145,14 +145,14 @@ _.generic run, _.isString, _.isArray, _.isArray, ( name, args, visited ) ->
 
   unless name in visited
     visited.push name
-    if (task = lookup name)?      
+    if ( task = lookup name )?      
       if background 
         run task, visited 
         # return undefined so we don't implicitly await
         # on the promise returned by the task        
         undefined
       else 
-        run task, visited
+        await run task, visited
     else
       throw new Error "task #{ name } not found."
 
