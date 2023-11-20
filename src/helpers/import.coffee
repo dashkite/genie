@@ -1,5 +1,6 @@
 import Path from "node:path"
 import Coffee from "coffeescript"
+import * as swc from "@swc/core"
 import { log } from "./log"
 import {
   isFile
@@ -9,21 +10,42 @@ import {
   glob
 } from "./file"
 
+current = ->
+  [ major ] = process.versions.node.split "."
+  major
+
 compile = ( source, target ) ->
-  write target,
-    Coffee.compile ( await read source ),
-      bare: true
-      inlineMap: true
-      filename: source
-      transpile:
-        filename: source
-        presets: [
-          [ require "@babel/preset-env" ]
-        ]
-        plugins: [
-          [ require "babel-plugin-autocomplete-index" ]          
-        ]
-        targets: node: "current"
+  js = Coffee.compile ( await read source ),
+    bare: true
+    inlineMap: true
+    filename: "/#{ source }"
+  { code } = await swc.transform js,
+    inputSourceMap: true  
+    sourceMaps: "inline" 
+    jsc:
+      parser:
+        syntax: "ecmascript"
+    module:
+      type: "commonjs"
+    env:
+      targets:
+        node: current()
+  write target, code
+
+    # Coffee.compile ,
+    #   bare: true
+    #   inlineMap: true
+    #   filename: source
+    #   transpile:
+    #     filename: source
+    #     presets: [
+    #       [ require "@babel/preset-env" ]
+    #     ]
+    #     plugins: [
+    #       [ require "babel-plugin-autocomplete-index" ]          
+    #     ]
+    #     targets: node: "current"
+    #     inputSourceMap: true
 
 getTarget = ( root, path ) ->
   directory = Path.dirname path
@@ -34,11 +56,8 @@ getTarget = ( root, path ) ->
 compileAll = ->
   for source from await glob "tasks/**/*.coffee"
     target = getTarget ".genie", source
-    try
-      if await isNewer source, target
-        await compile source, target
-    catch error
-      console.log error
+    if await isNewer source, target
+      await compile source, target
 
 relative = Path.join "tasks", "index.js"
 
