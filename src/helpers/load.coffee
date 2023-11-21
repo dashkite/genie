@@ -2,15 +2,14 @@ import { read } from "./file"
 
 loadGenieModules = ( Genie ) ->
   { devDependencies } = JSON.parse await read "./package.json"
-  Promise.all do ->
-    for qname in Object.keys devDependencies
-      name = if qname.startsWith "@"
-        ( qname.split "/" )[ 1 ]
-      else qname
-      if name.startsWith "genie-"
-        exports = require require.resolve qname, 
-          paths: [ "./node_modules" ]
-        exports?.default? Genie
+  for qname in Object.keys devDependencies
+    name = if qname.startsWith "@"
+      ( qname.split "/" )[ 1 ]
+    else qname
+    if name.startsWith "genie-"
+      exports = require require.resolve qname, 
+        paths: [ "./node_modules" ]
+      await exports?.default? Genie
 
 export { loadGenieModules }
 

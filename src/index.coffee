@@ -1,5 +1,4 @@
 import * as _ from "@dashkite/joy"
-
 import { log, round } from "./helpers/log"
 import { Benchmark } from "./helpers/benchmark"
 
