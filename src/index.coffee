@@ -100,8 +100,14 @@ run = _.generic
   description: "Run a Genie task or tasks."
 
 _.generic run, _.isArray, _.isArray, _.isArray, ( tasks, args, visited ) ->
+  promised = []
   for task in tasks
-    await run task, args, visited
+    if task.endsWith "&"
+      promised.push run task, args, visited
+    else
+      await run task, args, visited
+  if promised.length > 0
+    Promise.all promised
 
 _.generic run, _.isArray, ( tasks ) -> run tasks, [], []
 
@@ -132,8 +138,8 @@ _.generic run, _.isObject, _.isArray,
 
 _.generic run, _.isString, _.isArray, _.isArray, ( name, args, visited ) ->
 
+  # backgrounding is managed in the array generic
   if _.endsWith "&", name
-    background = true
     name = name[0..-2]
 
   if _.endsWith ":*", name
@@ -145,13 +151,7 @@ _.generic run, _.isString, _.isArray, _.isArray, ( name, args, visited ) ->
   unless name in visited
     visited.push name
     if ( task = lookup name )?      
-      if background 
-        run task, visited 
-        # return undefined so we don't implicitly await
-        # on the promise returned by the task        
-        undefined
-      else 
-        await run task, visited
+      await run task, visited
     else
       throw new Error "task #{ name } not found."
 
