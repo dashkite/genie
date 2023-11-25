@@ -109,7 +109,8 @@ _.generic run, _.isArray, _.isArray, _.isArray, ( tasks, args, visited ) ->
     else
       await run task, args, visited
   if promised.length > 0
-    Promise.all promised
+    await Promise.all promised
+  return
 
 _.generic run, _.isArray, ( tasks ) -> run tasks, [], []
 
@@ -118,10 +119,10 @@ _.generic run, _.isObject, _.isArray,
 
     if running[ name ]?
       log.info "Waiting on #{ name } ..."
-      await running[ name ]
+      await running[ name ]      
       return
 
-    running[ name ] ?= new Promise ( resolve, reject ) ->
+    running[ name ] ?= do ->
 
       log.info "Starting #{ name } ..."
       Benchmark.start name
@@ -146,10 +147,12 @@ _.generic run, _.isObject, _.isArray,
         duration /= 1000
         units = "s"
       log.info "Finished #{ name } in #{ round duration }#{ units }."
+      
+      # clear the promise
+      running[ name ] ?= null
 
       await ( run after, args, visited ) if after?
-
-      delete running[ name ]
+  
 
 _.generic run, _.isString, _.isArray, _.isArray, ( name, args, visited ) ->
 
@@ -164,9 +167,9 @@ _.generic run, _.isString, _.isArray, _.isArray, ( name, args, visited ) ->
       name[0..-3]
 
   unless name in visited
-    visited.push name
     if ( task = lookup name )?      
       await run task, visited
+      visited.push name
     else
       throw new Error "task #{ name } not found."
 
