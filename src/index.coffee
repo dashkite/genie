@@ -12,6 +12,8 @@ hooks =
   before: {}
   after: {}
 
+running = {}
+
 lookup = ( name, args = []) ->
   names = _.split ":", name
   if names.some _.isEmpty
@@ -114,27 +116,40 @@ _.generic run, _.isArray, ( tasks ) -> run tasks, [], []
 _.generic run, _.isObject, _.isArray,
   ({ name, actions, args, dependencies, before, after }, visited ) ->
 
-    log.info "Starting #{ name } ..."
-    Benchmark.start name
+    if running[ name ]?
+      log.info "Waiting on #{ name } ..."
+      await running[ name ]
+      return
 
-    # attempt to run explicit and implicit dependencies
-    await ( run before, args, visited ) if before?
-    await run dependencies, args, visited
+    running[ name ] ?= new Promise ( resolve, reject ) ->
 
-    # attempt to run the main tasks
-    for action in actions
-      await _.apply action, args
+      log.info "Starting #{ name } ..."
+      Benchmark.start name
 
-    Benchmark.finish name
-    duration = Benchmark.duration name
-    if duration < 1000
-      units = "ms"
-    else
-      duration /= 1000
-      units = "s"
-    log.info "Finished #{ name } in #{ round duration }#{ units }."
+      # attempt to run explicit and implicit dependencies
+      await ( run before, args, visited ) if before?
+      await run dependencies, args, visited
 
-    await ( run after, args, visited ) if after?
+      # attempt to run the main tasks
+      try
+        for action in actions
+          await _.apply action, args
+      catch error
+        log.error "Error running #{ name }"
+        throw error
+
+      Benchmark.finish name
+      duration = Benchmark.duration name
+      if duration < 1000
+        units = "ms"
+      else
+        duration /= 1000
+        units = "s"
+      log.info "Finished #{ name } in #{ round duration }#{ units }."
+
+      await ( run after, args, visited ) if after?
+
+      delete running[ name ]
 
 _.generic run, _.isString, _.isArray, _.isArray, ( name, args, visited ) ->
 
