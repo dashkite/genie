@@ -1,4 +1,6 @@
 import "source-map-support/register"
+import Path from "node:path"
+import FS from "node:fs"
 import YAML from "js-yaml"
 
 import dayjs from "dayjs"
@@ -9,10 +11,11 @@ import { isFile, read } from "./helpers/file"
 import { getTaskFile } from "./helpers/import"
 import { loadGenieModules } from "./helpers/load"
 import { Benchmark } from "./helpers/benchmark"
+import { program } from "commander"
 
-tasks = process.argv[2..]
+run = ( tasks, { exclude }) ->
 
-do ->
+  console.log tasks, exclude
 
   log.info "Loading tasks ..."
 
@@ -21,7 +24,7 @@ do ->
   if await isFile "genie.yaml"
     Genie.configure YAML.load await read "genie.yaml"
 
-  await loadGenieModules Genie
+  await loadGenieModules Genie, exclude
 
   if ( path = await getTaskFile())?
     require path
@@ -41,3 +44,19 @@ do ->
   catch error
     log.error error
     process.exit 1
+
+
+program
+  .version do ({ path, json, pkg } = {}) ->
+    path = Path.join __dirname, "..", "..", "package.json"
+    json = FS.readFileSync path, "utf8"
+    pkg = JSON.parse json
+    pkg.version
+  .enablePositionalOptions()
+  .description "task manager"
+  .option "-x, --exclude <presets...>", 
+    "Exclude a preset from auto-loaded"
+  .argument "<tasks...>", "Task runner for CoffeeScript"
+  .action run
+
+program.parseAsync()
