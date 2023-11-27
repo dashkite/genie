@@ -101,25 +101,28 @@ run = _.generic
   name: "run"
   description: "Run a Genie task or tasks."
 
-_.generic run, _.isArray, _.isArray, _.isArray, ( tasks, args, visited ) ->
-  promised = []
-  for task in tasks
-    if task.endsWith "&"
-      promised.push run task, args, visited
-    else
-      await run task, args, visited
-  if promised.length > 0
-    await Promise.all promised
-  return
-
 _.generic run, _.isArray, ( tasks ) -> run tasks, [], []
+
+_.generic run, _.isString, (task) -> run task, [], []
+
+_.generic run, _.isArray, _.isArray, _.isArray, 
+  ( tasks, args, visited ) ->
+    promised = []
+    for task in tasks
+      if task.endsWith "&"
+        promised.push run task, args, visited
+      else
+        await run task, args, visited
+    if promised.length > 0
+      await Promise.all promised
+    return
 
 _.generic run, _.isObject, _.isArray,
   ({ name, actions, args, dependencies, before, after }, visited ) ->
 
     if running[ name ]?
       log.info "Waiting on #{ name } ..."
-      await running[ name ]      
+      await running[ name ]
       return
 
     running[ name ] ?= do ->
@@ -148,33 +151,49 @@ _.generic run, _.isObject, _.isArray,
         units = "s"
       log.info "Finished #{ name } in #{ round duration }#{ units }."
       
-      # clear the promise
-      running[ name ] ?= null
-
       await ( run after, args, visited ) if after?
   
+      # clear the promise
+      running[ name ] = "completed"
 
-_.generic run, _.isString, _.isArray, _.isArray, ( name, args, visited ) ->
 
-  # backgrounding is managed in the array generic
-  if _.endsWith "&", name
-    name = name[0..-2]
+_.generic run, _.isString, _.isArray, _.isArray,
+  ( name, args, visited ) ->
 
-  if _.endsWith ":*", name
-    name = if args.length > 0
-      name.replace "*", args.join ":"
-    else
-      name[0..-3]
+    # backgrounding is managed in the array generic
+    if _.endsWith "&", name
+      name = name[0..-2]
 
-  unless name in visited
-    if ( task = lookup name )?      
-      await run task, visited
-      visited.push name
-    else
-      throw new Error "task #{ name } not found."
+    if _.endsWith ":*", name
+      name = if args.length > 0
+        name.replace "*", args.join ":"
+      else
+        name[0..-3]
 
-_.generic run, _.isString, (task) ->
-  await run task, [], []
+    unless name in visited
+      if ( task = lookup name )?      
+        await run task, visited
+        visited.push name
+      else
+        throw new Error "task #{ name } not found."
+
+
+import chalk from "chalk"
+
+process.on "exit", ->
+
+  do ({ task } = {}) ->
+
+    console.log chalk.green "Completed Tasks:"
+    for task, status of running when status == "completed"
+      console.log chalk.green "  #{ task }"
+
+    console.log chalk.yellow "Pending Tasks:"
+    for task, status of running when status != "completed"
+      console.log chalk.yellow "  #{ task }"
+    
+
+
 
 export {
   lookup
