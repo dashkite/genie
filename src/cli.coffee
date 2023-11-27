@@ -15,6 +15,8 @@ import { program } from "commander"
 
 run = ( tasks, { exclude }) ->
 
+  exclude ?= []
+
   console.log tasks, exclude
 
   log.info "Loading tasks ..."
