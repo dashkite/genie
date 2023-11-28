@@ -13,7 +13,7 @@ import { loadGenieModules } from "./helpers/load"
 import { Benchmark } from "./helpers/benchmark"
 import { program } from "commander"
 
-run = ( tasks, { exclude }) ->
+run = ( tasks, { exclude, halt }) ->
 
   exclude ?= []
 
@@ -41,6 +41,9 @@ run = ( tasks, { exclude }) ->
     if tasks.length == 0
       print Genie.list().join "\n"
     else
+      cycles = Genie.decycle tasks
+      if halt && cycles
+        process.exit 1
       await Genie.run tasks
 
   catch error
@@ -58,6 +61,7 @@ program
   .description "task manager"
   .option "-x, --exclude <presets...>", 
     "Exclude a preset from auto-loaded"
+  .option "-c, --halt", "Halt if a cycle is detected", false
   .argument "<tasks...>", "Task runner for CoffeeScript"
   .action run
 

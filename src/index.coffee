@@ -30,6 +30,18 @@ lookup = ( name, args = []) ->
     ]
   undefined
 
+strip = ( name ) ->
+
+  if _.endsWith "&", name
+    name[0..-2]
+  else if _.endsWith ":*", name
+    if args.length > 0
+      name.replace "*", args.join ":"
+    else
+      name[0..-3]
+  else name
+
+
 list = -> ( _.keys tasks ).sort()
 
 _on = _.generic
@@ -43,11 +55,13 @@ _.generic _on, _.isString, _.isArray, _.isFunction,
       dependencies: [ task.dependencies..., dependencies... ]
       actions: [ task.actions..., action ]
     }
+    tasks[ name ]
 
 _.generic _on, _.isString, _.isString, _.isFunction,
   ( name, dependencies, action ) ->
     _on name, ( dependencies.split /\s+/ ), action
 
+# TODO maybe handle missing action directly?
 _.generic _on, _.isString, _.isDefined,
   ( name, dependencies ) -> _on name, dependencies, ->
 
@@ -96,6 +110,42 @@ _.generic after, _.isString, _.isArray,
 _.generic after, _.isString, _.isString,
   ( name, dependencies ) ->
     after name, _.split /\s+/, dependencies
+
+reportCycle = ( cycle ) ->
+  do ({ fancy } = {}) ->
+    fancy = cycle.join " -> "
+    log.warn "Cycle detected: #{ fancy }"
+
+__decycle = do ( visited = {}) ->
+  ( name, dependencies, path ) ->
+    do ({ _dependencies, key, task, cycle } = {}) ->
+      name = strip name
+      _dependencies = dependencies.map strip
+      key = [ name, _dependencies... ].join " "
+      unless visited[ key ]?
+        visited[ key ] = true
+        path ?= [ name ]
+        if name in _dependencies
+          reportCycle [ path..., name ]
+          index = _dependencies.indexOf name
+          dependencies.splice index, 1
+          true
+        else if _dependencies.length > 0
+          cycle = false
+          for dependency in _dependencies
+            task = lookup dependency
+            cycle = __decycle name, task.dependencies, [ path..., task.name ]
+            cycle = ( __decycle task.name, task.dependencies ) || cycle
+          cycle
+        else false
+      else true
+
+_decycle = ( task ) -> __decycle task, ( lookup strip task ).dependencies
+
+decycle = ( tasks ) -> 
+  tasks
+    .map _decycle
+    .some ( result ) -> result  
 
 run = _.generic
   name: "run"
@@ -160,15 +210,7 @@ _.generic run, _.isObject, _.isArray,
 _.generic run, _.isString, _.isArray, _.isArray,
   ( name, args, visited ) ->
 
-    # backgrounding is managed in the array generic
-    if _.endsWith "&", name
-      name = name[0..-2]
-
-    if _.endsWith ":*", name
-      name = if args.length > 0
-        name.replace "*", args.join ":"
-      else
-        name[0..-3]
+    name = strip name
 
     unless name in visited
       if ( task = lookup name )?      
@@ -205,4 +247,5 @@ export {
   list
   configure
   get
+  decycle
 }
