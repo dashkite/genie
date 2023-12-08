@@ -7,6 +7,7 @@ import {
   isNewer
   read
   write
+  rm
   glob
 } from "./file"
 
@@ -32,21 +33,6 @@ compile = ( source, target ) ->
         node: current()
   write target, code
 
-    # Coffee.compile ,
-    #   bare: true
-    #   inlineMap: true
-    #   filename: source
-    #   transpile:
-    #     filename: source
-    #     presets: [
-    #       [ require "@babel/preset-env" ]
-    #     ]
-    #     plugins: [
-    #       [ require "babel-plugin-autocomplete-index" ]          
-    #     ]
-    #     targets: node: "current"
-    #     inputSourceMap: true
-
 getTarget = ( root, path ) ->
   directory = Path.dirname path
   extension = Path.extname path
@@ -54,10 +40,16 @@ getTarget = ( root, path ) ->
   Path.join root, directory, "#{ basename }.js"
 
 compileAll = ->
+  targets = []
   for source from await glob "tasks/**/*.coffee"
     target = getTarget ".genie", source
+    targets.push target
     if await isNewer source, target
       await compile source, target
+  # remove targets that have no correspodning source
+  for target from await glob ".genie/tasks/**/*.js"
+    if !( target in targets )
+      await rm target
 
 relative = Path.join "tasks", "index.js"
 

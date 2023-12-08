@@ -222,21 +222,6 @@ _.generic run, _.isString, _.isArray, _.isArray,
 
 import chalk from "chalk"
 
-process.on "exit", ->
-
-  do ({ task } = {}) ->
-
-    console.log chalk.green "Completed Tasks:"
-    for task, status of running when status == "completed"
-      console.log chalk.green "  #{ task }"
-
-    console.log chalk.yellow "Pending Tasks:"
-    for task, status of running when status != "completed"
-      console.log chalk.yellow "  #{ task }"
-    
-
-
-
 export {
   lookup
   define

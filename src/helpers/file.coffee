@@ -25,8 +25,10 @@ write = ( path, output ) ->
   await FS.mkdir ( Path.dirname path ), recursive: true
   FS.writeFile path, output
 
-glob = ( patterns ) ->
-  Glob.glob patterns, cwd: "."
+rm = ( path ) -> FS.rm path
+
+glob = ( patterns, cwd = "." ) ->
+  Glob.glob patterns, { cwd }
 
 export {
   isFile
@@ -34,5 +36,6 @@ export {
   isNewer
   read
   write
+  rm
   glob
 }

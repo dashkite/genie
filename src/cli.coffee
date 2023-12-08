@@ -17,8 +17,6 @@ run = ( tasks, { exclude, halt }) ->
 
   exclude ?= []
 
-  console.log tasks, exclude
-
   log.info "Loading tasks ..."
 
   Benchmark.start "loading"
@@ -62,7 +60,7 @@ program
   .option "-x, --exclude <presets...>", 
     "Exclude a preset from auto-loaded"
   .option "-c, --halt", "Halt if a cycle is detected", false
-  .argument "<tasks...>", "Task runner for CoffeeScript"
+  .argument "[tasks...]", "Task runner for CoffeeScript"
   .action run
 
 program.parseAsync()
