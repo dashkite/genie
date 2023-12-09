@@ -113,6 +113,12 @@ it will print *foo bar*.
 
 You may define a `genie.yaml` file in the directory from which you will run `genie` and that configuration will be available to tasks via the `get` function. This is useful for dynamically configuring pre-packaged tasks.
 
+## Presets
+
+Development dependencies whose names (regardless of their scope) begin with `genie-` will be preloaded by Genie. Such modules are expected to export a (possibly asynchronous) task definition function taking the Genie instance that called them. They can then use this instance to define new tasks.
+
+Preset loading may be surpressed for a given preset by using the `-x` option.
+
 ## API
 
 ### after
