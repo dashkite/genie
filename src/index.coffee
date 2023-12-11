@@ -134,8 +134,11 @@ __decycle = do ( visited = {}) ->
           cycle = false
           for dependency in _dependencies
             task = lookup dependency
-            cycle = __decycle name, task.dependencies, [ path..., task.name ]
-            cycle = ( __decycle task.name, task.dependencies ) || cycle
+            if task?
+              cycle = __decycle name, task.dependencies, [ path..., task.name ]
+              cycle = ( __decycle task.name, task.dependencies ) || cycle
+            else
+              console.warn "missing dependency: #{ dependency }"
           cycle
         else false
       else true
