@@ -117,6 +117,10 @@ reportCycle = ( cycle ) ->
     fancy = cycle.join " -> "
     log.warn "Cycle detected: #{ fancy }"
 
+# TODO handle missing tasks
+#      lookup returns undefined when the task is missing
+#      but we need to do something with that here
+#      (or change lookup to throw)
 __decycle = do ( visited = {}) ->
   ( name, dependencies, path ) ->
     do ({ _dependencies, key, task, cycle } = {}) ->
@@ -152,6 +156,9 @@ decycle = ( tasks ) ->
   tasks
     .map _decycle
     .some ( result ) -> result  
+
+# TODO add count helper
+#      to support progress bar
 
 run = _.generic
   name: "run"

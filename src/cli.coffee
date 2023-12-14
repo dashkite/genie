@@ -57,7 +57,6 @@ run = ( tasks, { quiet, exclude, halt }) ->
     log.error error
     process.exit 1
 
-
 program
   .version do ({ path, json, pkg } = {}) ->
     path = Path.join __dirname, "..", "..", "package.json"
