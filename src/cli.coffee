@@ -1,6 +1,7 @@
 import "source-map-support/register"
 import Path from "node:path"
 import FS from "node:fs"
+import chalk from "chalk"
 import YAML from "js-yaml"
 
 import dayjs from "dayjs"
@@ -18,7 +19,8 @@ run = ( tasks, { quiet, exclude, halt }) ->
   unless quiet
     log.level = "info"
 
-  log.info "run at #{( dayjs().format "ddd MMM DD h:mm:ss A" )}"
+  log.info "run at " +
+    chalk.magenta dayjs().format "ddd MMM DD h:mm:ss A"
 
   exclude ?= []
 
@@ -35,9 +37,11 @@ run = ( tasks, { quiet, exclude, halt }) ->
     require path
 
   Benchmark.finish "loading"
-  
-  log.info "Finished loading tasks in 
-    #{ round Benchmark.duration "loading" }ms."
+
+  # TODO have logger automatically detect duration
+  #      once we switch to log objects instead of text
+  log.info "Finished loading tasks" + 
+    chalk.magenta " in #{ round Benchmark.duration "loading" }ms."
   
   try
 

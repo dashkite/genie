@@ -6,7 +6,7 @@ frame = ( list, message ) ->
   result = ""
   for item in list
     result += "[ #{ item } ] "
-  result = ( chalk.magenta result ) + message
+  result = ( chalk.magenta.dim result ) + message
   
 colors =
   info: "green"

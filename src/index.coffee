@@ -1,6 +1,7 @@
 import * as _ from "@dashkite/joy"
 import { log, round } from "./helpers/log"
 import { Benchmark } from "./helpers/benchmark"
+import chalk from "chalk"
 
 configuration = {}
 configure = ( c ) -> configuration = c
@@ -196,13 +197,16 @@ _.generic run, _.isObject, _.isArray,
         throw error
 
       Benchmark.finish name
+      # TODO have logger automatically detect duration
+      #      once we switch to log objects instead of text
       duration = Benchmark.duration name
       if duration < 1000
         units = "ms"
       else
         duration /= 1000
         units = "s"
-      log.info "Finished #{ name } in #{ round duration }#{ units }."
+      log.info "Finished #{ name }" + 
+        chalk.magenta " in #{ round duration }#{ units }."
       
       await ( run after, args, visited ) if after?
   
@@ -222,8 +226,6 @@ _.generic run, _.isString, _.isArray, _.isArray,
       else
         throw new Error "task #{ name } not found."
 
-
-import chalk from "chalk"
 
 export {
   lookup
