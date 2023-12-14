@@ -13,7 +13,12 @@ import { loadGenieModules } from "./helpers/load"
 import { Benchmark } from "./helpers/benchmark"
 import { program } from "commander"
 
-run = ( tasks, { exclude, halt }) ->
+run = ( tasks, { quiet, exclude, halt }) ->
+
+  unless quiet
+    log.level = "info"
+
+  log.info "run at #{( dayjs().format "ddd MMM DD h:mm:ss A" )}"
 
   exclude ?= []
 
@@ -56,11 +61,13 @@ program
     pkg = JSON.parse json
     pkg.version
   .enablePositionalOptions()
-  .description "task manager"
+  .description "Task Manager"
   .option "-x, --exclude <presets...>", 
     "Exclude a preset from auto-loaded"
   .option "-c, --halt", "Halt if a cycle is detected", false
-  .argument "[tasks...]", "Task runner for CoffeeScript"
+  .option "-q, --quiet", "Supress normal logging
+    (useful when piping to stdout)"
+  .argument "[tasks...]", "List of tasks to run"
   .action run
 
 program.parseAsync()

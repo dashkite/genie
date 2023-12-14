@@ -1,70 +1,26 @@
 import chalk from "chalk"
 import dayjs from "dayjs"
+import log from "@dashkite/kaiko"
 
-DEBUG = do ->
-  if ( debug = process.env.DEBUG )?
-    ( debug.split /\s+/ )
-      .map ( name ) -> name.toLowerCase()
-      .includes "genie"
+frame = ( list, message ) ->
+  result = ""
+  for item in list
+    result += "[ #{ item } ] "
+  result = ( chalk.magenta result ) + message
+  
+colors =
+  info: "green"
+  warn: "yellow"
+  error: "red"
+  fatal: "bgRed"
+  debug: "blue"
 
-splat = ( f ) ->
-  ( value ) ->
-    f if Array.isArray value 
-      value
-        .map splat f
-        .join " " 
-    else if value.stack?
-      if DEBUG
-        if value.source?
-          "#{ value.message }\n#{ value.source.stack }"
-        else
-          value.stack
-      else
-        value.message
-    else value
-    
-Colors =
-  info: splat ( value ) -> chalk.green value
-  warn: splat ( value ) -> chalk.yellow value
-  error: splat ( value ) -> chalk.red value
-  debug: splat ( value ) -> chalk.blue value
-  highlight: splat ( value ) -> chalk.magenta value
+log.observe ( event ) ->
+  color = colors[ event.level ] ? "green"
+  message = frame [ "genie" ], event.data
+  console.log chalk[ color ] message
 
-print = ( value ) -> console.log Colors.info value
-
-# TODO use Temporal API
-makeTimestamp = ->
-  dayjs().format "YYYY-MM-DD hh:mm:ss.SSS A"
-
-class Logger
-
-  @make: ( scopes ) -> 
-    Object.assign ( new Logger ), { scopes }
-
-  # TODO make this a getter
-  @label: ( instance ) ->
-    instance
-      .scopes
-      .map ( scope ) -> "[ #{ scope } ]"
-      .join ""
-
-  scope: ( name ) ->
-    Logger.make [ @scopes..., name ]
-
-  log: ( level, args... ) ->
-    console[ level ] ( Colors.highlight makeTimestamp() ),
-      ( Colors[ level ] Logger.label @ ),
-      ( Colors[ level ] args )
-
-  error: ( args... ) -> @log "error", args...
-
-  warn: ( args... ) -> @log "warn", args...
-
-  info: ( args... ) -> @log "info", args...
-
-  debug: ( args... ) -> @log "debug", args...
-
-log = Logger.make [ "genie" ]
+print = ( value ) -> console.log chalk.green value
 
 round = do ( formatter = undefined ) -> 
   ( n ) ->
