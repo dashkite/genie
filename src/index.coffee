@@ -144,7 +144,9 @@ __decycle = do ( visited = {}) ->
         else false
       else true
 
-_decycle = ( task ) -> __decycle task, ( lookup strip task ).dependencies
+_decycle = ( start ) -> 
+  if ( task = lookup strip start )?
+    __decycle start, task.dependencies
 
 decycle = ( tasks ) -> 
   tasks
