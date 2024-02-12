@@ -151,6 +151,11 @@ decycle = ( tasks ) ->
     .map _decycle
     .some ( result ) -> result  
 
+
+apply = ( task ) ->
+  delete running[ task ]
+  run task
+
 run = _.generic
   name: "run"
   description: "Run a Genie task or tasks."
@@ -174,7 +179,7 @@ _.generic run, _.isArray, _.isArray, _.isArray,
 _.generic run, _.isObject, _.isArray,
   ({ name, actions, args, dependencies, before, after }, visited ) ->
 
-    if running[ name ]?
+    if running[ name ]?.then?
       log.info "Waiting on #{ name } ..."
       await running[ name ]
       return
@@ -210,7 +215,6 @@ _.generic run, _.isObject, _.isArray,
       
       await ( run after, args, visited ) if after?
   
-      # clear the promise
       running[ name ] = "completed"
 
 
@@ -233,6 +237,7 @@ export {
   _on as on
   before
   after
+  apply
   run
   list
   configure
