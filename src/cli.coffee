@@ -48,9 +48,9 @@ run = ( tasks, { quiet, exclude, halt }) ->
     if tasks.length == 0
       print Genie.list().join "\n"
     else
-      cycles = Genie.decycle tasks
-      if halt && cycles
-        process.exit 1
+      # cycles = Genie.decycle tasks
+      # if halt && cycles
+      #   process.exit 1
       await Genie.run tasks
 
   catch error

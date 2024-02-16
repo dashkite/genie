@@ -144,7 +144,8 @@ __decycle = do ( visited = {}) ->
         else false
       else true
 
-_decycle = ( task ) -> __decycle task, ( lookup strip task ).dependencies
+_decycle = ( task ) -> 
+  __decycle task, ( lookup strip task ).dependencies
 
 decycle = ( tasks ) -> 
   tasks
@@ -152,8 +153,8 @@ decycle = ( tasks ) ->
     .some ( result ) -> result  
 
 
-apply = ( task ) ->
-  delete running[ task ]
+rerun = ( task ) ->
+  running = {}
   run task
 
 run = _.generic
@@ -237,8 +238,8 @@ export {
   _on as on
   before
   after
-  apply
   run
+  rerun
   list
   configure
   get
