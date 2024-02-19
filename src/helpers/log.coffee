@@ -19,6 +19,8 @@ log.observe ( event ) ->
   color = colors[ event.level ] ? "green"
   message = frame [ "genie" ], event.data
   console.log chalk[ color ] message
+  if event.level == "debug" && event.data.stack?
+    console.log chalk[ color ] event.data.stack
 
 print = ( value ) -> console.log chalk.green value
 
@@ -29,4 +31,14 @@ round = do ( formatter = undefined ) ->
       maximumFractionDigits: 2
     formatter.format n
 
-export { log, print, round }
+Format =
+
+  duration: ( duration ) ->
+    if duration < 1000
+      units = "ms"
+    else
+      duration /= 1000
+      units = "s"
+    chalk.magenta "#{ round duration }#{ units }."
+
+export { log, print, round, Format }

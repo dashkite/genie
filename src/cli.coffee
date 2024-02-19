@@ -14,10 +14,13 @@ import { loadGenieModules } from "./helpers/load"
 import { Benchmark } from "./helpers/benchmark"
 import { program } from "commander"
 
-run = ( tasks, { quiet, exclude, halt }) ->
+run = ( tasks, { quiet, debug, exclude, halt }) ->
 
   unless quiet
     log.level = "info"
+
+  if debug
+    log.level = "debug"
 
   log.info "run at " +
     chalk.magenta dayjs().format "ddd MMM DD h:mm:ss A"
@@ -29,7 +32,7 @@ run = ( tasks, { quiet, exclude, halt }) ->
   Benchmark.start "loading"
 
   if await isFile "genie.yaml"
-    Genie.configure YAML.load await read "genie.yaml"
+    Genie.write YAML.load await read "genie.yaml"
 
   await loadGenieModules Genie, exclude
 
@@ -54,7 +57,10 @@ run = ( tasks, { quiet, exclude, halt }) ->
       await Genie.run tasks
 
   catch error
-    log.error error
+    if debug
+      log.debug error
+    else
+      log.error error
     process.exit 1
 
 
@@ -71,6 +77,7 @@ program
   .option "-c, --halt", "Halt if a cycle is detected", false
   .option "-q, --quiet", "Supress normal logging
     (useful when piping to stdout)"
+  .option "-d, --debug", "Provide debug output"
   .argument "[tasks...]", "List of tasks to run"
   .action run
 

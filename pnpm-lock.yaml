@@ -49,6 +49,9 @@ devDependencies:
   '@dashkite/amen-console':
     specifier: ^0.0.2
     version: 0.0.2
+  '@dashkite/assert':
+    specifier: ^0.1.4
+    version: 0.1.4
   babel-plugin-autocomplete-index:
     specifier: ^0.2.0
     version: 0.2.0(@babel/core@7.23.5)
@@ -1239,9 +1242,14 @@ packages:
     resolution: {integrity: sha512-bJBbRiIcQaKBT2A+EOltZaZMqGCptPw7rfSnTsu1AiicYWrXwe41zwo2W0a079OpJTLsH9v2vnU20xMCP9mQqA==}
     dev: true
 
+  /@dashkite/assert@0.1.4:
+    resolution: {integrity: sha512-OLOzI/lA+EwCh6znSexGAG1V4bkaT5gU04xl6ApEluv5jICnHhinZ707MObu+jhVVJ9uHDDlG85O+Afn1aTQoQ==}
+    dependencies:
+      '@dashkite/joy': 0.3.16
+    dev: true
+
   /@dashkite/joy@0.3.16:
     resolution: {integrity: sha512-dsU0us4j1Pb+zceoBvLbnZ2PbmULkJUtM2vtWLxKmoc1DE4w9SVTiPTe6JWvF0A0vk90ldv+Lc9qEA5x3O+DtQ==}
-    dev: false
 
   /@dashkite/kaiko@0.3.1:
     resolution: {integrity: sha512-KuTY4YXS1O3MlMcmDU3oozyxbAsydAEJ4rP+C7UIXBPPBVWuhYQ5tS1htZX37woWfMcq9FLM2eTh/QCkCYEMtg==}
