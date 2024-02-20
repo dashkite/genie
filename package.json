@@ -2,13 +2,21 @@
   "name": "@dashkite/genie",
   "version": "0.7.2",
   "description": "Task runner for CoffeeScript",
+  "exports": {
+    ".": {
+      "node": "./build/src/index.js"
+    }
+  },
+  "bin": {
+    "genie": "bin/genie"
+  },
   "files": [
     "build/src",
     "bin"
   ],
-  "main": "build/src/index.js",
-  "bin": {
-    "genie": "bin/genie"
+  "imports": {
+    "#genie": "./build/src/index.js",
+    "#helpers/*": "./build/src/helpers/*.js"
   },
   "scripts": {
     "build": "scripts/build",

@@ -41,4 +41,10 @@ Format =
       units = "s"
     chalk.magenta "#{ round duration }#{ units }."
 
+  timestamp: ( t ) ->
+    chalk.magenta t.format "ddd MMM DD h:mm:ss A"
+  
+  now: ->
+    Format.timestamp dayjs()
+
 export { log, print, round, Format }

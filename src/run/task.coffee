@@ -3,8 +3,8 @@ import * as Type from "@dashkite/joy/type"
 import { Groups } from "./group"
 import { Specifier } from "./specifier"
 import { Context } from "./context"
-import { Format, log } from "../helpers/log"
-import { Benchmark } from "../helpers/benchmark"
+import { Format, log } from "#helpers/log"
+import { Benchmark } from "#helpers/benchmark"
 
 Tasks =
 
@@ -37,6 +37,7 @@ Task =
       if !command?
         context
       else if Type.isPromise command
+        log.info "Waiting on #{ command.path } ..."
         command
       else
         context.visited[ command.path ] = true
@@ -53,6 +54,7 @@ Task =
           log.info "Finished #{ command.path } in " +
             Format.duration Benchmark.duration command.path
           await Tasks.run Context.from "after", frame
+          delete context.promised[ command.path ]
           context
    
 export { Tasks, Task }
