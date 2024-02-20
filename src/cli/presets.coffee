@@ -25,10 +25,11 @@ Presets =
 
   import: ( exclude ) ->
     { devDependencies } = JSON.parse await FSX.read "package.json"
-    for qname in Object.keys devDependencies
-      if Presets.valid exclude, qname
+    qnames = Object.keys devDependencies
+    await Promise.all do ->
+      for qname in qnames when Presets.valid exclude, qname
         exports = require require.resolve qname, 
           paths: [ "./node_modules" ]
-        await exports?.default? Genie
+        exports?.default? Genie
 
 export default Presets

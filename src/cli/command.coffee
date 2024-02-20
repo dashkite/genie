@@ -1,8 +1,3 @@
-import "source-map-support/register"
-import chalk from "chalk"
-
-import dayjs from "dayjs"
-
 import * as Genie from "#genie"
 import initialize from "./initialize"
 import { log } from "#helpers/log"
