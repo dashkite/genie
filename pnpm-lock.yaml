@@ -11,6 +11,9 @@ dependencies:
   '@dashkite/kaiko':
     specifier: link:../kaiko
     version: link:../kaiko
+  '@dashkite/scan':
+    specifier: link:../scan
+    version: link:../scan
   '@swc/core':
     specifier: ^1.3.96
     version: 1.3.96

@@ -8,6 +8,8 @@ import Path from "path"
 # module under test
 import { define } from "../src/define"
 import { Specifier } from "../src/run/specifier"
+import colorize from "../src/helpers/colorize"
+import chalk from "chalk"
 
 do ->
 
@@ -64,9 +66,24 @@ do ->
             assert.equal "bar", command.args?[0]
 
         ]
-
-
       ]
+
+    test "colorize", [
+      test "foo [ bar ] baz", ->
+        assert.equal ( colorize "foo [ bar ] baz" ),
+          "foo " +
+            ( chalk.blue.bold "[ bar ]" ) +
+            " baz"
+
+      test "foo baz", ->
+        assert.equal ( colorize "foo baz" ),
+          "foo baz"
+
+      test "foo [ bar baz", ->
+        assert.equal ( colorize "foo [ bar baz" ),
+          "foo [ bar baz"
+
+    ]
 
 
 

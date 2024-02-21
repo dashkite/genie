@@ -1,12 +1,14 @@
+import * as Type from "@dashkite/joy/type"
 import chalk from "chalk"
 import dayjs from "dayjs"
 import log from "@dashkite/kaiko"
+import colorize from "./colorize"
 
 frame = ( list, message ) ->
   result = ""
   for item in list
     result += "[ #{ item } ] "
-  result = ( chalk.magenta.dim result ) + message
+  result = ( chalk.magenta.dim result ) + colorize message
   
 colors =
   info: "green"
