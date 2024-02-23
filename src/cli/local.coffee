@@ -22,7 +22,7 @@ Local =
   coffee: Path.join "tasks", "index.coffee"
 
   compile: ( source, target ) ->
-    js = Coffee.compile ( await read source ),
+    js = Coffee.compile ( await FSX.read source ),
       bare: true
       inlineMap: true
       filename: "/#{ source }"
@@ -38,7 +38,7 @@ Local =
       env:
         targets:
           node: version
-    write target, code
+    FSX.write target, code
 
   build: ->
     targets = []
