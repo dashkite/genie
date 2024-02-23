@@ -1,4 +1,3 @@
-import * as Scan from "@dashkite/scan"
 import chalk from "chalk"
 
 parse = ( text ) ->
