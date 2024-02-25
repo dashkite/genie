@@ -18,11 +18,12 @@ colors =
   debug: "blue"
 
 log.observe ( event ) ->
-  color = colors[ event.level ] ? "green"
-  message = frame [ "genie" ], event.data
-  console.log chalk[ color ] message
-  if event.level == "debug" && event.data.stack?
-    console.log chalk[ color ] event.data.stack
+  if event.data?
+    color = colors[ event.level ] ? "green"
+    message = frame [ "genie" ], event.data.message ? event.data
+    console.log chalk[ color ] message
+    if event.level == "debug" && event.data.stack?
+      console.log chalk[ color ] event.data.stack
 
 print = ( value ) -> console.log chalk.green value
 
