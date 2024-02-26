@@ -45,6 +45,7 @@ Task =
           log.info "Starting #{ command.path } ..."
           Benchmark.start command.path
           frame = { context, command }
+          await Tasks.run Context.from "initialize", frame
           await Tasks.run Context.from "before", frame
           await Tasks.run Context.from "dependencies", frame
           await Promise.all do ->

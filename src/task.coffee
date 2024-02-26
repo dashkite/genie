@@ -2,6 +2,7 @@ tasks = {}
 
 make = ( name, task ) -> tasks[ name ] = { 
   name
+  initialize: []
   before: [] 
   after: []
   dependencies: []
