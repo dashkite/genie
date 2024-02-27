@@ -1,6 +1,6 @@
 import * as Genie from "#genie"
 import initialize from "./initialize"
-import { log } from "#helpers/log"
+import { log, print } from "#helpers/log"
 
 command = ( tasks, options ) ->
 
