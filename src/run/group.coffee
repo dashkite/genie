@@ -47,7 +47,7 @@ Group.run = do ({ run } = {}) ->
   generic run,
     Group.isParallel,
     ( context ) ->
-      for specifier in context.group.specifier
+      for specifier in context.group.specifiers
         Task.run { context..., specifier }
 
   run
