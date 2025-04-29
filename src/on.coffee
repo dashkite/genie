@@ -26,7 +26,6 @@ generic event,
   ( name, dependencies, action ) ->
     event name, ( dependencies.split /\s+/ ), action
 
-# TODO maybe handle missing action directly?
 generic event, 
   Type.isString, 
   Type.isDefined,
