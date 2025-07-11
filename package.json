@@ -21,7 +21,7 @@
   "scripts": {
     "build": "scripts/build",
     "test": "scripts/test",
-    "release": "scripts/release"
+    "release": "genie release"
   },
   "repository": {
     "type": "git",
