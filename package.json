@@ -12,7 +12,9 @@
   },
   "files": [
     "build/src",
-    "bin"
+    "bin",
+    "build/browser/src",
+    "build/node/src"
   ],
   "imports": {
     "#genie": "./build/src/index.js",
