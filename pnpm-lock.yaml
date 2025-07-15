@@ -55,8 +55,8 @@ importers:
         specifier: ^0.3.0
         version: 0.3.0
       '@dashkite/genie-release':
-        specifier: ^0.2.11
-        version: 0.2.11
+        specifier: ^0.2.12
+        version: 0.2.12
       babel-plugin-autocomplete-index:
         specifier: ^0.2.0
         version: 0.2.0(@babel/core@7.26.9)
@@ -561,8 +561,8 @@ packages:
   '@dashkite/assert@0.3.0':
     resolution: {integrity: sha512-x0lHMF8k2CkFrx7gmtT8qoZ3GPk+RPPLRG5RcKMheqS7zDPEDPZ7IkHzXt2kq7LyvTMZZ+TI3suW44+Ms6Mqbg==}
 
-  '@dashkite/genie-release@0.2.11':
-    resolution: {integrity: sha512-7xkcSSaSh17FLyibgRpNp6IWyeEvsd6cimVPAp7NtOCYVQG4LWonjlh6W/OCxF/4lGrijdZ/q/MDGM2LNBIEFg==}
+  '@dashkite/genie-release@0.2.12':
+    resolution: {integrity: sha512-pO0uXG1ntZT+inD63YobSW84MyeHNiEuwpiDsDR5LvwVfhXlwQtZEQCVpimfHKAf14SeZ5RL8YQKgeRy1V/+Lw==}
 
   '@dashkite/joy@0.3.16':
     resolution: {integrity: sha512-dsU0us4j1Pb+zceoBvLbnZ2PbmULkJUtM2vtWLxKmoc1DE4w9SVTiPTe6JWvF0A0vk90ldv+Lc9qEA5x3O+DtQ==}
@@ -1623,7 +1623,7 @@ snapshots:
     dependencies:
       '@dashkite/joy': 0.6.0
 
-  '@dashkite/genie-release@0.2.11':
+  '@dashkite/genie-release@0.2.12':
     dependencies:
       '@dashkite/zephyr': 0.2.0
       zx: 8.7.1
