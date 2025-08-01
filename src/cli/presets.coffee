@@ -24,9 +24,11 @@ Presets =
     ( Name.isPreset qname ) && !(( Name.preset qname ) in exclude )
 
   import: ( exclude ) ->
-    { devDependencies } = JSON.parse await FSX.read "package.json"
+    { dependencies, devDependencies } = JSON.parse await FSX.read "package.json"
     qnames = Object.keys devDependencies
-    await Promise.all do ->
+    if ( presets = Genie.get "presets" )?
+      qnames = [ qnames..., presets... ]
+    Promise.all do ->
       for qname in qnames when Presets.valid exclude, qname
         exports = require require.resolve qname, 
           paths: [ "./node_modules" ]
