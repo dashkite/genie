@@ -1,6 +1,6 @@
 {
   "name": "@dashkite/genie",
-  "version": "0.20.12",
+  "version": "0.20.13",
   "description": "Task runner for CoffeeScript",
   "exports": {
     ".": {
